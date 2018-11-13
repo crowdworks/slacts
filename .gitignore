@@ -13,3 +13,6 @@
 
 # direnv
 .envrc
+
+# JetBrains IDE
+.idea/
