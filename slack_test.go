@@ -2,15 +2,23 @@ package slacts_test
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/crowdworks/slacts"
 	"github.com/nlopes/slack"
 )
 
-type testSlackClient struct{}
+type testSlackClient struct {
+	hasError bool
+}
 
 func (tsc *testSlackClient) SearchMessagesContext(ctx context.Context, q string, params slack.SearchParameters) (*slack.SearchMessages, error) {
+
+	if tsc.hasError {
+		return nil, errors.New("something error occurred")
+	}
+
 	sm := &slack.SearchMessages{
 		Total: 27,
 	}
@@ -21,16 +29,49 @@ func (tsc *testSlackClient) SearchMessagesContext(ctx context.Context, q string,
 func TestSlackClient_CountQuery(t *testing.T) {
 	ctx := context.Background()
 
-	sc := slacts.SlackClient{
-		Client: new(testSlackClient),
+	cases := map[string]struct {
+		client               *testSlackClient
+		expectError          bool
+		expectedErrorMessage string
+	}{
+		"normal": {
+			client:      &testSlackClient{},
+			expectError: false,
+		},
+		"has something error": {
+			client:               &testSlackClient{hasError: true},
+			expectError:          true,
+			expectedErrorMessage: "something error occurred",
+		},
 	}
 
-	count, err := sc.CountQuery(ctx, "in:general channel")
-	if err != nil {
-		t.Error(err)
-	}
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			sc := slacts.SlackClient{
+				Client: c.client,
+			}
 
-	if count != 27 {
-		t.Errorf("query count expected 27 but actual %d", count)
+			count, err := sc.CountQuery(ctx, "in:general channel")
+
+			if c.expectError {
+				if err == nil {
+					t.Error("expected to occur error but no errors occurred")
+				}
+
+				if c.expectedErrorMessage != err.Error() {
+					t.Errorf("unexpected error messages: expected '%s' actual '%s'", c.expectedErrorMessage, err)
+				}
+
+				return
+			}
+
+			if err != nil {
+				t.Error(err)
+			}
+
+			if count != 27 {
+				t.Errorf("query count expected 27 but actual %d", count)
+			}
+		})
 	}
 }
