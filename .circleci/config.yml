@@ -21,6 +21,9 @@ jobs:
         paths:
         - /go/pkg/mod/cache
     - run:
+        name: Exec go vet
+        command: go vet ./...
+    - run:
         name: Run tests
         command: go test -v ./...
 
