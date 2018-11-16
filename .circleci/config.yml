@@ -15,6 +15,10 @@ jobs:
     - run:
         name: Install dependencies
         command: go mod download
+    - run:
+        name: Install linters
+        command: |
+          go get golang.org/x/tools/cmd/goimports
     - save_cache:
         name: Save go modules cache
         key: mod-{{ .Environment.COMMON_CACHE_KEY }}-{{ checksum "go.mod" }}
@@ -23,6 +27,9 @@ jobs:
     - run:
         name: Exec go vet
         command: go vet ./...
+    - run:
+        name: Exec goimports
+        command: test -z "$(goimports -l . | tee /dev/stderr)"
     - run:
         name: Run tests
         command: go test -v ./...
