@@ -3,7 +3,10 @@ package slacts_test
 import (
 	"context"
 	"errors"
+	"net/http"
+	"reflect"
 	"testing"
+	"time"
 
 	"github.com/crowdworks/slacts"
 	"github.com/nlopes/slack"
@@ -71,6 +74,55 @@ func TestSlackClient_CountQuery(t *testing.T) {
 
 			if count != 27 {
 				t.Errorf("query count expected 27 but actual %d", count)
+			}
+		})
+	}
+}
+
+func TestNewSlackClient(t *testing.T) {
+	type args struct {
+		token      string
+		httpclient *http.Client
+	}
+
+	cases := map[string]struct {
+		args args
+		want *slacts.SlackClient
+	}{
+		"default": {
+			args: args{
+				token:      "aaa",
+				httpclient: nil,
+			},
+			want: &slacts.SlackClient{
+				Client: slack.New("aaa"),
+			},
+		},
+		"custom client": {
+			args: args{
+				token: "bbb",
+				httpclient: &http.Client{
+					Transport:     nil,
+					CheckRedirect: nil,
+					Jar:           nil,
+					Timeout:       30 * time.Second,
+				},
+			},
+			want: &slacts.SlackClient{
+				Client: slack.New("bbb", slack.OptionHTTPClient(&http.Client{
+					Transport:     nil,
+					CheckRedirect: nil,
+					Jar:           nil,
+					Timeout:       30 * time.Second,
+				})),
+			},
+		},
+	}
+
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			if got := slacts.NewSlackClient(c.args.token, c.args.httpclient); !reflect.DeepEqual(got, c.want) {
+				t.Errorf("NewSlackClient() = %v, want %v", got, c.want)
 			}
 		})
 	}
