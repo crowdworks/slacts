@@ -7,10 +7,12 @@ import (
 	"github.com/nlopes/slack"
 )
 
+// SlackRequester is interface that wrap slack.Client only methods this package needs
 type SlackRequester interface {
 	SearchMessagesContext(context.Context, string, slack.SearchParameters) (*slack.SearchMessages, error)
 }
 
+// SlackClient is api client for slack request
 type SlackClient struct {
 	Client SlackRequester
 }
