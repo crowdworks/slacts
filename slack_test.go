@@ -54,7 +54,7 @@ func TestSlackClient_CountQuery(t *testing.T) {
 				Client: c.client,
 			}
 
-			count, err := sc.CountQuery(ctx, "in:general channel")
+			count, err := sc.CountQuery(ctx, "in:#general channel")
 
 			if c.expectError {
 				if err == nil {
