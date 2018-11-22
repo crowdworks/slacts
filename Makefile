@@ -3,11 +3,27 @@
 # https://gist.github.com/tadashi-aikawa/da73d277a3c1ec6767ed48d1335900f3
 .PHONY: $(shell grep -E '^[a-zA-Z_-]+:' $(MAKEFILE_LIST) | sed 's/://')
 
-goimports: ## fix format by goimports
-	goimports -w .
-
 install: ## install slacts command
 	go install github.com/crowdworks/slacts/cmd/slacts
+
+test: ## run tests for all package
+	go test -v ./...
+
+coverage: ## measure tests coverage and generate coverage profile html
+	go test -coverprofile coverprofile -v ./...
+	go tool cover -html coverprofile -o coverprofile.html
+
+govet: ## exec go vet checks all for package
+	go vet ./...
+
+golint: ## exec golint checks all for package
+	golint ./...
+
+goimports: ## exec goimports checks all for package
+	goimports -l .
+
+goimports-fix: ## fix format by goimports
+	goimports -w .
 
 # https://postd.cc/auto-documented-makefile/
 help: ## show help
