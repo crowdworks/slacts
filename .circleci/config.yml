@@ -6,6 +6,7 @@ jobs:
     - image: golang:1.11.2
       environment:
         GO111MODULE: "on"
+        TEST_RESULTS: /tmp/test-results
     steps:
     - checkout
     - restore_cache:
@@ -20,6 +21,7 @@ jobs:
         command: |
           go get golang.org/x/tools/cmd/goimports
           go get golang.org/x/lint/golint
+          go get github.com/jstemmer/go-junit-report
     - save_cache:
         name: Save go modules cache
         key: mod-{{ .Environment.COMMON_CACHE_KEY }}-{{ checksum "go.mod" }}
@@ -36,8 +38,15 @@ jobs:
         command: test -z "$(golint ./... | tee /dev/stderr)"
     - run:
         name: Run tests
-        command: go test -v ./...
-
+        command: |
+          mkdir -p ${TEST_RESULTS}
+          trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
+          go test -v ./... | tee ${TEST_RESULTS}/go-test.out
+    - store_artifacts: # Upload test summary for display in Artifacts
+        path: /tmp/test-results
+        destination: raw-test-output
+    - store_test_results:
+        path: /tmp/test-results
 workflows:
   version: 2
   default:
