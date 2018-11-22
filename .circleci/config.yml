@@ -41,8 +41,9 @@ jobs:
         command: |
           mkdir -p ${TEST_RESULTS}
           trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
-          go test -v ./... | tee ${TEST_RESULTS}/go-test.out
-    - store_artifacts: # Upload test summary for display in Artifacts
+          go test -coverprofile ${TEST_RESULTS}/coverprofile -v ./... | tee ${TEST_RESULTS}/go-test.out
+          go tool cover -html ${TEST_RESULTS}/coverprofile -o ${TEST_RESULTS}/coverprofile.html
+    - store_artifacts:
         path: /tmp/test-results
         destination: raw-test-output
     - store_test_results:
