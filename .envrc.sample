@@ -1,2 +1,5 @@
 export GO111MODULE=on
 export SLACK_API_TOKEN=xxxxxxxxxxxxxxxxxxx
+
+export DATADOG_API_KEY=
+export DATADOG_APP_KEY=

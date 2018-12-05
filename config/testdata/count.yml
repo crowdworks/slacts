@@ -1,0 +1,9 @@
+tasks:
+  - name: "test_task"
+    kind: "count"
+    query: "in:#general on:2018/12/03"
+    datadog:
+      metric: "general.slack.count"
+      tags:
+        - "from:test"
+        - "env:test"

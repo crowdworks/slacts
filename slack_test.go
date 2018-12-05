@@ -54,7 +54,7 @@ func TestSlackClient_CountQuery(t *testing.T) {
 				Client: c.client,
 			}
 
-			count, err := sc.CountQuery(ctx, "in:#general channel")
+			count, err := sc.CountQuery(ctx, slacts.NewSlackQuery("in:#general channel"))
 
 			if c.expectError {
 				if err == nil {
@@ -123,6 +123,46 @@ func TestNewSlackClient(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			if got := slacts.NewSlackClient(c.args.token, c.args.httpclient); !reflect.DeepEqual(got, c.want) {
 				t.Errorf("NewSlackClient() = %v, want %v", got, c.want)
+			}
+		})
+	}
+}
+
+func TestSlackQuery_Date(t *testing.T) {
+	cases := map[string]struct {
+		q       *slacts.SlackQuery
+		want    time.Time
+		wantErr bool
+	}{
+		"only date": {
+			q:       slacts.NewSlackQuery("on:2018/02/28"),
+			want:    time.Date(2018, 2, 28, 0, 0, 0, 0, time.UTC),
+			wantErr: false,
+		},
+		"with other query": {
+			q:       slacts.NewSlackQuery("in:#general on:2018/02/28 @channel"),
+			want:    time.Date(2018, 2, 28, 0, 0, 0, 0, time.UTC),
+			wantErr: false,
+		},
+		"no date in query": {
+			q:       slacts.NewSlackQuery("in:#general @channel"),
+			wantErr: true,
+		},
+	}
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			got, err := c.q.Date()
+			if (err != nil) != c.wantErr {
+				t.Errorf("SlackQuery.Date() error = %v, wantErr %v", err, c.wantErr)
+				return
+			}
+
+			if c.wantErr {
+				return
+			}
+
+			if !reflect.DeepEqual(got, &c.want) {
+				t.Errorf("SlackQuery.Date() = %v, want %v", got, c.want)
 			}
 		})
 	}
