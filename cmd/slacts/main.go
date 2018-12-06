@@ -117,14 +117,10 @@ var slackCountCmd = &cobra.Command{
 	},
 }
 
-func stringPointer(v string) *string {
-	return &v
-}
-
 func float64Pointer(v float64) *float64 {
 	return &v
 }
 
 func main() {
-	rootCmd.Execute()
+	_ = rootCmd.Execute()
 }

@@ -3,6 +3,8 @@ package slacts
 import (
 	"net/http"
 
+	"github.com/pkg/errors"
+
 	datadog "github.com/zorkian/go-datadog-api"
 )
 
@@ -36,6 +38,10 @@ func NewDatadogClient(apiKey, appKey string, httpclient *http.Client) *DatadogCl
 
 // PostMetrics to datadog
 func (dc *DatadogClient) PostMetrics(metrics []DatadogMetric) error {
+	if metrics == nil || len(metrics) == 0 {
+		return errors.New("no metrics given")
+	}
+
 	if err := dc.Client.PostMetrics(metrics); err != nil {
 		return err
 	}
