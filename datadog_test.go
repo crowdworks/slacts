@@ -2,10 +2,13 @@ package slacts_test
 
 import (
 	"errors"
+	"net/http"
+	"reflect"
 	"testing"
 	"time"
 
 	"github.com/crowdworks/slacts"
+	datadog "github.com/zorkian/go-datadog-api"
 )
 
 type testDatadogClient struct {
@@ -117,4 +120,60 @@ func stringPointer(v string) *string {
 
 func float64Pointer(v float64) *float64 {
 	return &v
+}
+
+func TestNewDatadogClient(t *testing.T) {
+	type args struct {
+		apiKey     string
+		appKey     string
+		httpclient *http.Client
+	}
+	cases := map[string]struct {
+		args args
+		want *slacts.DatadogClient
+	}{
+		"default client": {
+			args: args{
+				apiKey:     "api_key",
+				appKey:     "app_key",
+				httpclient: nil,
+			},
+			want: &slacts.DatadogClient{
+				Client: datadog.NewClient("api_key", "app_key"),
+			},
+		},
+		"custom http client": {
+			args: args{
+				apiKey: "api_key",
+				appKey: "app_key",
+				httpclient: &http.Client{
+					Transport:     nil,
+					CheckRedirect: nil,
+					Jar:           nil,
+					Timeout:       10000 * time.Second,
+				},
+			},
+			want: &slacts.DatadogClient{
+				Client: datadogCustomClient("api_key", "app_key", &http.Client{
+					Transport:     nil,
+					CheckRedirect: nil,
+					Jar:           nil,
+					Timeout:       10000 * time.Second,
+				}),
+			},
+		},
+	}
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			if got := slacts.NewDatadogClient(c.args.apiKey, c.args.appKey, c.args.httpclient); !reflect.DeepEqual(got, c.want) {
+				t.Errorf("NewDatadogClient() = %v, want %v", got, c.want)
+			}
+		})
+	}
+}
+
+func datadogCustomClient(apiKey, appKey string, httpclient *http.Client) *datadog.Client {
+	c := datadog.NewClient(apiKey, appKey)
+	c.HttpClient = httpclient
+	return c
 }
