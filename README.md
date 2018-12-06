@@ -53,8 +53,7 @@ result: 12
 ### `slacts slack count <slack_search_term>`
 
 Returns the number of search result.
-Please refer [Guide to search in Slack
-](https://get.slack.help/hc/en-us/articles/202528808-Guide-to-search-in-Slack-).
+Please refer [Guide to search in Slack](https://get.slack.help/hc/en-us/articles/202528808-Guide-to-search-in-Slack-).
 
 ## License
 
