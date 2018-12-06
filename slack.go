@@ -3,6 +3,10 @@ package slacts
 import (
 	"context"
 	"net/http"
+	"regexp"
+	"time"
+
+	"github.com/pkg/errors"
 
 	"github.com/nlopes/slack"
 )
@@ -35,11 +39,39 @@ func NewSlackClient(token string, httpclient *http.Client) *SlackClient {
 }
 
 // CountQuery returns count of matches with query
-func (sc *SlackClient) CountQuery(ctx context.Context, query string) (int, error) {
-	res, err := sc.Client.SearchMessagesContext(ctx, query, slack.SearchParameters{})
+func (sc *SlackClient) CountQuery(ctx context.Context, query *SlackQuery) (int, error) {
+	res, err := sc.Client.SearchMessagesContext(ctx, string(*query), slack.SearchParameters{})
 	if err != nil {
 		return 0, err
 	}
 
 	return res.Total, nil
+}
+
+// SlackQuery for slack message search
+type SlackQuery string
+
+// TODO: enable to parse other format: for example 2018-01-01
+var queryDateRegexp = regexp.MustCompile(`on:(\d{4}\/\d{1,2}\/\d{1,2})`)
+
+// NewSlackQuery is initializer of Slack query
+func NewSlackQuery(query string) *SlackQuery {
+	sq := SlackQuery(query)
+	return &sq
+}
+
+// Date returns date
+func (q *SlackQuery) Date() (*time.Time, error) {
+	matches := queryDateRegexp.FindAllStringSubmatch(string(*q), -1)
+
+	if len(matches) == 0 || len(matches[0]) < 2 {
+		return nil, errors.New("did not find date")
+	}
+
+	date, err := time.Parse("2006/01/02", matches[0][1])
+	if err != nil {
+		return nil, err
+	}
+
+	return &date, nil
 }
