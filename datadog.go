@@ -38,7 +38,7 @@ func NewDatadogClient(apiKey, appKey string, httpclient *http.Client) *DatadogCl
 
 // PostMetrics to datadog
 func (dc *DatadogClient) PostMetrics(metrics []DatadogMetric) error {
-	if metrics == nil || len(metrics) == 0 {
+	if len(metrics) == 0 {
 		return errors.New("no metrics given")
 	}
 
