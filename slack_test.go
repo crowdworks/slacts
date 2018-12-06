@@ -144,6 +144,10 @@ func TestSlackQuery_Date(t *testing.T) {
 			want:    time.Date(2018, 2, 28, 0, 0, 0, 0, time.UTC),
 			wantErr: false,
 		},
+		"wrong date format": {
+			q:       slacts.NewSlackQuery("in:#general on:2018/22/28 @channel"),
+			wantErr: true,
+		},
 		"no date in query": {
 			q:       slacts.NewSlackQuery("in:#general @channel"),
 			wantErr: true,
