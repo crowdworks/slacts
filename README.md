@@ -20,7 +20,7 @@ https://api.slack.com/custom-integrations/legacy-tokens
 Install [direnv](https://direnv.net/).
 
 ```bash
-$ brew install direnv # MacOS
+$ brew install direnv # macOS
 ```
 
 Copy .envrc from `.envrc.sample` and set Slack token.
