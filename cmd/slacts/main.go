@@ -45,7 +45,7 @@ func newTaskCmd() *cobra.Command {
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			tasks, err := config.ReadYaml(opt.file)
+			tasks, err := config.ReadYaml(opt.file, taskNameFilters(args)...)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -104,6 +104,14 @@ func newTaskCmd() *cobra.Command {
 	cmd.PersistentFlags().StringVarP(&opt.file, "file", "f", "", "task definition file path")
 
 	return cmd
+}
+
+func taskNameFilters(names []string) []config.ReadYamlOption {
+	var opts []config.ReadYamlOption
+	for _, name := range names {
+		opts = append(opts, config.OptionNameFilter(name))
+	}
+	return opts
 }
 
 // newSlackCmd
