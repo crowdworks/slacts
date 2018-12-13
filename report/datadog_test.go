@@ -1,4 +1,4 @@
-package slacts_test
+package report_test
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/crowdworks/slacts"
+	"github.com/crowdworks/slacts/report"
 	datadog "github.com/zorkian/go-datadog-api"
 )
 
@@ -15,7 +15,7 @@ type testDatadogClient struct {
 	hasError bool
 }
 
-func (tdc *testDatadogClient) PostMetrics(metrics []slacts.DatadogMetric) error {
+func (tdc *testDatadogClient) PostMetrics(metrics []report.DatadogMetric) error {
 	if tdc.hasError {
 		return errors.New("some error occurred")
 	}
@@ -25,10 +25,10 @@ func (tdc *testDatadogClient) PostMetrics(metrics []slacts.DatadogMetric) error 
 
 func TestDatadogClient_PostMetrics(t *testing.T) {
 	type fields struct {
-		Client slacts.DatadogRequester
+		Client report.DatadogRequester
 	}
 	type args struct {
-		metrics []slacts.DatadogMetric
+		metrics []report.DatadogMetric
 	}
 	cases := map[string]struct {
 		fields  fields
@@ -42,10 +42,10 @@ func TestDatadogClient_PostMetrics(t *testing.T) {
 				},
 			},
 			args: args{
-				metrics: []slacts.DatadogMetric{
+				metrics: []report.DatadogMetric{
 					{
 						Metric: stringPointer("test.post.metric"),
-						Points: []slacts.DatadogDataPoint{
+						Points: []report.DatadogDataPoint{
 							{
 								float64Pointer(float64(time.Now().Unix())),
 								float64Pointer(3.0),
@@ -75,7 +75,7 @@ func TestDatadogClient_PostMetrics(t *testing.T) {
 				},
 			},
 			args: args{
-				metrics: []slacts.DatadogMetric{},
+				metrics: []report.DatadogMetric{},
 			},
 			wantErr: true,
 		},
@@ -86,10 +86,10 @@ func TestDatadogClient_PostMetrics(t *testing.T) {
 				},
 			},
 			args: args{
-				metrics: []slacts.DatadogMetric{
+				metrics: []report.DatadogMetric{
 					{
 						Metric: stringPointer("test.post.metric"),
-						Points: []slacts.DatadogDataPoint{
+						Points: []report.DatadogDataPoint{
 							{
 								float64Pointer(float64(time.Now().Unix())),
 								float64Pointer(3.0),
@@ -104,7 +104,7 @@ func TestDatadogClient_PostMetrics(t *testing.T) {
 	}
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			dc := &slacts.DatadogClient{
+			dc := &report.DatadogClient{
 				Client: c.fields.Client,
 			}
 			if err := dc.PostMetrics(c.args.metrics); (err != nil) != c.wantErr {
@@ -130,7 +130,7 @@ func TestNewDatadogClient(t *testing.T) {
 	}
 	cases := map[string]struct {
 		args args
-		want *slacts.DatadogClient
+		want *report.DatadogClient
 	}{
 		"default client": {
 			args: args{
@@ -138,7 +138,7 @@ func TestNewDatadogClient(t *testing.T) {
 				appKey:     "app_key",
 				httpclient: nil,
 			},
-			want: &slacts.DatadogClient{
+			want: &report.DatadogClient{
 				Client: datadog.NewClient("api_key", "app_key"),
 			},
 		},
@@ -153,7 +153,7 @@ func TestNewDatadogClient(t *testing.T) {
 					Timeout:       10000 * time.Second,
 				},
 			},
-			want: &slacts.DatadogClient{
+			want: &report.DatadogClient{
 				Client: datadogCustomClient("api_key", "app_key", &http.Client{
 					Transport:     nil,
 					CheckRedirect: nil,
@@ -165,7 +165,7 @@ func TestNewDatadogClient(t *testing.T) {
 	}
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			if got := slacts.NewDatadogClient(c.args.apiKey, c.args.appKey, c.args.httpclient); !reflect.DeepEqual(got, c.want) {
+			if got := report.NewDatadogClient(c.args.apiKey, c.args.appKey, c.args.httpclient); !reflect.DeepEqual(got, c.want) {
 				t.Errorf("NewDatadogClient() = %v, want %v", got, c.want)
 			}
 		})

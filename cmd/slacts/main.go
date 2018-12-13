@@ -8,6 +8,7 @@ import (
 
 	"github.com/crowdworks/slacts"
 	"github.com/crowdworks/slacts/config"
+	"github.com/crowdworks/slacts/report"
 	"github.com/spf13/cobra"
 )
 
@@ -63,13 +64,13 @@ var taskCmd = &cobra.Command{
 						log.Fatalln("unset Datadog API credentials. Need both API key and application key")
 					}
 
-					ddClient := slacts.NewDatadogClient(ddConfig.APIKey(), ddConfig.AppKey(), nil)
+					ddClient := report.NewDatadogClient(ddConfig.APIKey(), ddConfig.AppKey(), nil)
 
 					// TODO: add lacked properties. for example, Unit, Host and etc...
-					metrics := []slacts.DatadogMetric{
+					metrics := []report.DatadogMetric{
 						{
 							Metric: &task.Datadog.Metric,
-							Points: []slacts.DatadogDataPoint{
+							Points: []report.DatadogDataPoint{
 								{
 									float64Pointer(float64(time.Now().Unix())),
 									float64Pointer(float64(count)),

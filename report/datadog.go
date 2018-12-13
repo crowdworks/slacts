@@ -1,10 +1,9 @@
-package slacts
+package report
 
 import (
 	"net/http"
 
 	"github.com/pkg/errors"
-
 	datadog "github.com/zorkian/go-datadog-api"
 )
 
