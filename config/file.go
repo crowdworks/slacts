@@ -64,27 +64,18 @@ type ReadYamlOption func(*Tasks) *Tasks
 
 // OptionNameFilter is option for ReadYaml
 // filter by task name
-func OptionNameFilter(name string) ReadYamlOption {
+func OptionNameFilter(names []string) ReadYamlOption {
 	return func(tasks *Tasks) *Tasks {
-		for i, task := range *tasks {
-			if task.Name == name {
-				tasks = unsetTask(tasks, i)
-				return tasks
+		var ts Tasks
+		for _, task := range *tasks {
+			for _, name := range names {
+				if task.Name == name {
+					ts = append(ts, task)
+				}
 			}
 		}
-		return tasks
+		return &ts
 	}
-}
-
-// unsetTask remove given index of task
-func unsetTask(tp *Tasks, i int) *Tasks {
-	if i >= len(*tp) {
-		return tp
-	}
-
-	t := *tp
-	tasks := append(t[:i], t[i+1:]...)
-	return &tasks
 }
 
 func (tc *Task) validate() error {

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/crowdworks/slacts"
@@ -28,9 +29,20 @@ var rootCmd = &cobra.Command{
 	Short: "a CLI tool for Slack statistics",
 }
 
+// filter for tasks
+// separator is ","
+type taskFilter struct {
+	namesStr string
+}
+
+func (f *taskFilter) names() []string {
+	return strings.Split(f.namesStr, ",")
+}
+
 func newTaskCmd() *cobra.Command {
 	type option struct {
-		file string
+		file   string
+		filter taskFilter
 	}
 
 	var opt option
@@ -45,9 +57,19 @@ func newTaskCmd() *cobra.Command {
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			tasks, err := config.ReadYaml(opt.file, taskNameFilters(args)...)
+			var taskOpts []config.ReadYamlOption
+
+			if len(opt.filter.names()) > 0 {
+				taskOpts = append(taskOpts, config.OptionNameFilter(opt.filter.names()))
+			}
+
+			tasks, err := config.ReadYaml(opt.file, taskOpts...)
 			if err != nil {
 				log.Fatal(err)
+			}
+
+			if len(*tasks) == 0 {
+				log.Fatal("no tasks executed")
 			}
 
 			for _, task := range *tasks {
@@ -102,16 +124,11 @@ func newTaskCmd() *cobra.Command {
 	}
 
 	cmd.PersistentFlags().StringVarP(&opt.file, "file", "f", "", "task definition file path")
+	cmd.PersistentFlags().StringVarP(&opt.filter.namesStr, "names", "n", "", `task names filter
+separator is ","
+for example: task_1,task_2,task_3`)
 
 	return cmd
-}
-
-func taskNameFilters(names []string) []config.ReadYamlOption {
-	var opts []config.ReadYamlOption
-	for _, name := range names {
-		opts = append(opts, config.OptionNameFilter(name))
-	}
-	return opts
 }
 
 // newSlackCmd

@@ -33,12 +33,29 @@ func TestReadYaml(t *testing.T) {
 			},
 			wantErr: false,
 		},
-		"filter by name": {
+		"filter by exists name": {
 			file: filepath.Join(pwd, "./testdata/count.yml"),
 			opts: []ReadYamlOption{
-				OptionNameFilter("test_task"),
+				OptionNameFilter([]string{"test_task"}),
 			},
-			want:    Tasks{},
+			want: Tasks{
+				{
+					Name:  "test_task",
+					Kind:  "count",
+					Query: "in:#general on:2018/12/03",
+					Datadog: Datadog{
+						Metric: "general.slack.count",
+						Tags:   []string{"from:test", "env:test"},
+					},
+				},
+			},
+			wantErr: false,
+		},
+		"filter by un exists name": {
+			file: filepath.Join(pwd, "./testdata/count.yml"),
+			opts: []ReadYamlOption{
+				OptionNameFilter([]string{"un-exist-task"}),
+			},
 			wantErr: false,
 		},
 		"undefined kind": {
