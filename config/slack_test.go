@@ -30,7 +30,7 @@ func TestNewSlackClientConfig(t *testing.T) {
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			os.Setenv("SLACK_API_TOKEN", c.envs.slackAPIToken)
+			_ = os.Setenv("SLACK_API_TOKEN", c.envs.slackAPIToken)
 			defer os.Setenv("SLACK_API_TOKEN", "")
 
 			got := NewSlackClientConfig()

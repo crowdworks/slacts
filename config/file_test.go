@@ -14,12 +14,13 @@ func TestReadYaml(t *testing.T) {
 	}
 	cases := map[string]struct {
 		file    string
-		want    []TaskConfig
+		opts    []ReadYamlOption
+		want    Tasks
 		wantErr bool
 	}{
 		"count": {
 			file: filepath.Join(pwd, "./testdata/count.yml"),
-			want: []TaskConfig{
+			want: Tasks{
 				{
 					Name:  "test_task",
 					Kind:  "count",
@@ -29,6 +30,31 @@ func TestReadYaml(t *testing.T) {
 						Tags:   []string{"from:test", "env:test"},
 					},
 				},
+			},
+			wantErr: false,
+		},
+		"filter by exists name": {
+			file: filepath.Join(pwd, "./testdata/count.yml"),
+			opts: []ReadYamlOption{
+				OptionNameFilter([]string{"test_task"}),
+			},
+			want: Tasks{
+				{
+					Name:  "test_task",
+					Kind:  "count",
+					Query: "in:#general on:2018/12/03",
+					Datadog: Datadog{
+						Metric: "general.slack.count",
+						Tags:   []string{"from:test", "env:test"},
+					},
+				},
+			},
+			wantErr: false,
+		},
+		"filter by un exists name": {
+			file: filepath.Join(pwd, "./testdata/count.yml"),
+			opts: []ReadYamlOption{
+				OptionNameFilter([]string{"un-exist-task"}),
 			},
 			wantErr: false,
 		},
@@ -50,7 +76,7 @@ func TestReadYaml(t *testing.T) {
 	}
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			got, err := ReadYaml(c.file)
+			got, err := ReadYaml(c.file, c.opts...)
 			if (err != nil) != c.wantErr {
 				t.Errorf("Read() error = %v, wantErr %v", err, c.wantErr)
 				return
@@ -101,14 +127,14 @@ func TestTaskConfig_DoesSendDatadog(t *testing.T) {
 	}
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			tc := &TaskConfig{
+			tc := &Task{
 				Name:    c.fields.Name,
 				Kind:    c.fields.Kind,
 				Query:   c.fields.Query,
 				Datadog: c.fields.Datadog,
 			}
 			if got := tc.DoesSendDatadog(); got != c.want {
-				t.Errorf("TaskConfig.DoesSendDatadog() = %v, want %v", got, c.want)
+				t.Errorf("Task.DoesSendDatadog() = %v, want %v", got, c.want)
 			}
 		})
 	}
