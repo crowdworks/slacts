@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestReadYaml(t *testing.T) {
@@ -13,12 +14,14 @@ func TestReadYaml(t *testing.T) {
 		t.Fatal(err)
 	}
 	cases := map[string]struct {
+		now     time.Time
 		file    string
 		opts    []ReadYamlOption
 		want    Tasks
 		wantErr bool
 	}{
 		"count": {
+			now:  time.Date(2018, 12, 4, 0, 0, 0, 0, time.UTC),
 			file: filepath.Join(pwd, "./testdata/count.yml"),
 			want: Tasks{
 				{
@@ -34,6 +37,7 @@ func TestReadYaml(t *testing.T) {
 			wantErr: false,
 		},
 		"filter by exists name": {
+			now:  time.Date(2018, 12, 4, 0, 0, 0, 0, time.UTC),
 			file: filepath.Join(pwd, "./testdata/count.yml"),
 			opts: []ReadYamlOption{
 				OptionNameFilter([]string{"test_task"}),
@@ -52,6 +56,7 @@ func TestReadYaml(t *testing.T) {
 			wantErr: false,
 		},
 		"filter by un exists name": {
+			now:  time.Date(2018, 12, 4, 0, 0, 0, 0, time.UTC),
 			file: filepath.Join(pwd, "./testdata/count.yml"),
 			opts: []ReadYamlOption{
 				OptionNameFilter([]string{"un-exist-task"}),
@@ -74,8 +79,10 @@ func TestReadYaml(t *testing.T) {
 			wantErr: true,
 		},
 	}
+
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
+			TimeNow = &c.now
 			got, err := ReadYaml(c.file, c.opts...)
 			if (err != nil) != c.wantErr {
 				t.Errorf("Read() error = %v, wantErr %v", err, c.wantErr)
@@ -87,7 +94,7 @@ func TestReadYaml(t *testing.T) {
 			}
 
 			if !reflect.DeepEqual(got, &c.want) {
-				t.Errorf("Read() = %v, want %v", got, c.want)
+				t.Errorf("Tasks = %v, want %v", got, c.want)
 			}
 		})
 	}

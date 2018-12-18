@@ -1,7 +1,7 @@
 tasks:
   - name: "test_task"
     kind: "count"
-    query: "in:#general on:2018/12/03"
+    query: "in:#general on:{{ .Yesterday }}"
     datadog:
       metric: "general.slack.count"
       tags:
