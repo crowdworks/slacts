@@ -1,12 +1,20 @@
 package config
 
 import (
+	"bytes"
 	"fmt"
+	"io"
+	"text/template"
+	"time"
 
 	"github.com/spf13/viper"
 )
 
 var (
+	// TimeNow can be define value from outside
+	// If undefined, timeNow() generate real time now
+	TimeNow *time.Time
+
 	kinds = []string{"count"}
 )
 
@@ -36,8 +44,13 @@ type Datadog struct {
 
 // ReadYaml of given file path
 func ReadYaml(file string, opts ...ReadYamlOption) (*Tasks, error) {
-	viper.SetConfigFile(file)
-	if err := viper.ReadInConfig(); err != nil {
+	reader, err := parseTemplate(file)
+	if err != nil {
+		return nil, err
+	}
+
+	viper.SetConfigType("yaml")
+	if err := viper.ReadConfig(reader); err != nil {
 		return nil, err
 	}
 
@@ -57,6 +70,29 @@ func ReadYaml(file string, opts ...ReadYamlOption) (*Tasks, error) {
 	}
 
 	return tasks, nil
+}
+
+func parseTemplate(file string) (io.Reader, error) {
+	t, err := template.ParseFiles(file)
+	if err != nil {
+		return nil, err
+	}
+
+	var b bytes.Buffer
+
+	type templateValues struct {
+		// Yesterday format Y/m/d
+		Yesterday string
+	}
+
+	r := &templateValues{
+		Yesterday: timeNow().Add(-24 * time.Hour).Format("2006/01/02"),
+	}
+	if err := t.Execute(&b, r); err != nil {
+		return nil, err
+	}
+
+	return &b, nil
 }
 
 // ReadYamlOption is type of ReadYaml option
@@ -99,4 +135,12 @@ func (tc *Task) validateKind() error {
 // DoesSendDatadog returns config has datadog config
 func (tc *Task) DoesSendDatadog() bool {
 	return tc.Datadog.Metric != ""
+}
+
+func timeNow() time.Time {
+	if TimeNow != nil {
+		return *TimeNow
+	}
+
+	return time.Now()
 }
