@@ -25,6 +25,14 @@ goimports: ## exec goimports checks all for package
 goimports-fix: ## fix format by goimports
 	goimports -w .
 
+lint: lint-docker lint-golang ## lint all
+
+lint-docker: ## lint Dockerfile
+	hadolint Dockerfile
+
+lint-golang: ## lint golang code
+	golangci-lint run ./...
+
 # https://postd.cc/auto-documented-makefile/
 help: ## show help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
