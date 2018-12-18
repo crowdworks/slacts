@@ -36,6 +36,9 @@ type taskFilter struct {
 }
 
 func (f *taskFilter) names() []string {
+	if strings.TrimSpace(f.namesStr) == "" {
+		return nil
+	}
 	return strings.Split(f.namesStr, ",")
 }
 
