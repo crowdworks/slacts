@@ -40,7 +40,7 @@ func NewSlackClient(token string, httpclient *http.Client) *SlackClient {
 
 // CountQuery returns count of matches with query
 func (sc *SlackClient) CountQuery(ctx context.Context, query *SlackQuery) (int, error) {
-	res, err := sc.Client.SearchMessagesContext(ctx, string(*query), slack.SearchParameters{})
+	res, err := sc.Client.SearchMessagesContext(ctx, query.String(), slack.SearchParameters{})
 	if err != nil {
 		return 0, err
 	}
@@ -74,4 +74,9 @@ func (q *SlackQuery) Date() (*time.Time, error) {
 	}
 
 	return &date, nil
+}
+
+// String .
+func (q *SlackQuery) String() string {
+	return string(*q)
 }

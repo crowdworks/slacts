@@ -171,3 +171,22 @@ func TestSlackQuery_Date(t *testing.T) {
 		})
 	}
 }
+
+func TestSlackQuery_String(t *testing.T) {
+	cases := map[string]struct {
+		q    *slacts.SlackQuery
+		want string
+	}{
+		"normal": {
+			q:    slacts.NewSlackQuery("in:#general on:2018/02/28 @channel"),
+			want: "in:#general on:2018/02/28 @channel",
+		},
+	}
+	for name, c := range cases {
+		t.Run(name, func(t *testing.T) {
+			if got := c.q.String(); got != c.want {
+				t.Errorf("SlackQuery.String() = %v, want %v", got, c.want)
+			}
+		})
+	}
+}
