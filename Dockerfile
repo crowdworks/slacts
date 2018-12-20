@@ -2,7 +2,7 @@
 # Builder container
 ###############################
 
-FROM golang:1.11.3-alpine3.8 AS builder
+FROM golang:1.11.4-alpine3.8 AS builder
 ENV GO111MODULE=on
 
 WORKDIR /go/src/github.com/crowdworks/slacts
