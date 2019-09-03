@@ -6,9 +6,8 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/pkg/errors"
-
 	"github.com/nlopes/slack"
+	"github.com/pkg/errors"
 )
 
 // SlackRequester is interface that wrap slack.Client only methods this package needs
