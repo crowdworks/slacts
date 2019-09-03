@@ -41,7 +41,7 @@ func NewSlackClient(token string, httpclient *http.Client) *SlackClient {
 func (sc *SlackClient) CountQuery(ctx context.Context, query *SlackQuery) (int, error) {
 	res, err := sc.Client.SearchMessagesContext(ctx, string(*query), slack.SearchParameters{})
 	if err != nil {
-		return 0, err
+		return 0, errors.Errorf("failed to search message API request: %s", err)
 	}
 
 	return res.Total, nil
