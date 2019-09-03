@@ -2,14 +2,14 @@
 # Builder container
 ###############################
 
-FROM golang:1.11.4-alpine3.8 AS builder
+FROM golang:1.12-alpine AS builder
 ENV GO111MODULE=on
 
 WORKDIR /go/src/github.com/crowdworks/slacts
 COPY . .
 
 RUN set -x \
-  && apk add --no-cache git="2.18.1-r0" build-base="0.5-r1" \
+  && apk add --no-cache git build-base \
   && go mod download \
   && go mod verify \
   && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo -installsuffix netgo  -o ./slacts ./cmd/slacts/main.go
@@ -18,12 +18,12 @@ RUN set -x \
 # Exec container
 ###############################
 
-FROM alpine:3.8
+FROM alpine:3.10
 
 ENV APP_DIR /usr/src/app
 
 RUN set -x \
-    && apk add --no-cache ca-certificates="20171114-r3" \
+    && apk add --no-cache ca-certificates \
     && adduser -S slacts \
     && echo "slacts:slacts" | chpasswd \
     && addgroup -S slacts \
