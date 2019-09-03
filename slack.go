@@ -39,7 +39,11 @@ func NewSlackClient(token string, httpclient *http.Client) *SlackClient {
 
 // CountQuery returns count of matches with query
 func (sc *SlackClient) CountQuery(ctx context.Context, query *SlackQuery) (int, error) {
-	res, err := sc.Client.SearchMessagesContext(ctx, string(*query), slack.SearchParameters{})
+	// Don't use zero value of `slack.SearchParameters`
+	// Slack API hasn't allowed changed empty parameter value since 08/30/2019
+	// This is just guest because Slack API has't announced about this
+	// https://api.slack.com/methods/search.messages
+	res, err := sc.Client.SearchMessagesContext(ctx, string(*query), slack.NewSearchParameters())
 	if err != nil {
 		return 0, errors.Errorf("failed to search message API request: %s", err)
 	}
