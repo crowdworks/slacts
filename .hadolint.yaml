@@ -1,2 +1,5 @@
 ignored:
   - DL4006
+  # version pinning
+  # in case of failing to download packages after a long time
+  - DL3018
