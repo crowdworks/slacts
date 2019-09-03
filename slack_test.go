@@ -44,7 +44,7 @@ func TestSlackClient_CountQuery(t *testing.T) {
 		"has something error": {
 			client:               &testSlackClient{hasError: true},
 			expectError:          true,
-			expectedErrorMessage: "something error occurred",
+			expectedErrorMessage: "failed to search message API request: something error occurred",
 		},
 	}
 
