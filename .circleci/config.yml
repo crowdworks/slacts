@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   test:
     docker:
-    - image: golang:1.11.4
+    - image: golang:1.12
       environment:
         GO111MODULE: "on"
         TEST_RESULTS: /tmp/test-results
@@ -56,12 +56,10 @@ jobs:
         path: /tmp/test-results
   docker-build:
     docker:
-    - image: docker:18.05.0
+    - image: circleci/python
     steps:
     - checkout
-    - setup_remote_docker:
-        version: 18.05.0-ce
-        docker_layer_caching: true
+    - setup_remote_docker
     - run:
         name: build
         command: docker build --no-cache -t slacts:latest .
