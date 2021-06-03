@@ -43,12 +43,6 @@ jobs:
           trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
           go test -coverprofile ${TEST_RESULTS}/coverage.txt -v ./... | tee ${TEST_RESULTS}/go-test.out
           go tool cover -html ${TEST_RESULTS}/coverage.txt -o ${TEST_RESULTS}/coverage.html
-    - run:
-        name: Send result codecov
-        working_directory: jsonrpc
-        command: |
-          cp ${TEST_RESULTS}/coverage.txt .
-          bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
     - store_artifacts:
         path: /tmp/test-results
         destination: raw-test-output
