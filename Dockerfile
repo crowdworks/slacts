@@ -31,4 +31,4 @@ USER slacts
 WORKDIR $APP_DIR
 
 ENTRYPOINT ["slacts"]
-CMD ["slacts", "--help"]
+CMD ["--help"]
