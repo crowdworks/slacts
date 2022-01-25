@@ -2,8 +2,7 @@
 # Builder container
 ###############################
 
-FROM golang:1.12-alpine AS builder
-ENV GO111MODULE=on
+FROM golang:1.17.6-alpine AS builder
 
 WORKDIR /go/src/github.com/crowdworks/slacts
 COPY . .
@@ -18,7 +17,7 @@ RUN set -x \
 # Exec container
 ###############################
 
-FROM alpine:3.10
+FROM alpine:3.15
 
 ENV APP_DIR /usr/src/app
 
