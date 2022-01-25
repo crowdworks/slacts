@@ -1,4 +1,4 @@
-// +build tools
+//go:build tools
 
 // Package tools manage CLI tools
 package tools
