@@ -1,5 +1,7 @@
 module github.com/crowdworks/slacts
 
+go 1.17
+
 require (
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/gorilla/websocket v1.4.1 // indirect
@@ -19,4 +21,14 @@ require (
 	golang.org/x/text v0.3.2 // indirect
 	golang.org/x/tools v0.0.0-20190903025054-afe7f8212f0d
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
+)
+
+require (
+	github.com/fsnotify/fsnotify v1.4.7 // indirect
+	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/mitchellh/mapstructure v1.1.2 // indirect
+	github.com/spf13/cast v1.3.0 // indirect
+	github.com/spf13/pflag v1.0.3 // indirect
+	gopkg.in/yaml.v2 v2.2.2 // indirect
 )
