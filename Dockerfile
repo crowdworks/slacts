@@ -2,38 +2,33 @@
 # Builder container
 ###############################
 
-FROM golang:1.17.6-alpine AS builder
+FROM golang:1.17.6-bullseye AS builder
 
 WORKDIR /go/src/github.com/crowdworks/slacts
-COPY . .
 
-RUN set -x \
-  && apk add --no-cache git build-base \
-  && go mod download \
-  && go mod verify \
-  && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo -installsuffix netgo  -o ./slacts ./cmd/slacts/main.go
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+RUN make install
 
 ###############################
 # Exec container
 ###############################
 
-FROM alpine:3.15
+FROM debian:bullseye-slim
 
 ENV APP_DIR /usr/src/app
 
 RUN set -x \
-    && apk add --no-cache ca-certificates \
-    && adduser -S slacts \
-    && echo "slacts:slacts" | chpasswd \
-    && addgroup -S slacts \
-    && addgroup slacts slacts \
-    && mkdir -p $APP_DIR
+    && useradd -s /bin/bash slacts \
+    && mkdir -p $APP_DIR \
+    && chown -R slacts:slacts $APP_DIR
 
-COPY --from=builder /go/src/github.com/crowdworks/slacts/slacts /usr/bin
-RUN chown -R slacts:slacts $APP_DIR
+COPY --from=builder /go/bin/slacts /usr/bin
 
 USER slacts
 WORKDIR $APP_DIR
 
 ENTRYPOINT ["slacts"]
-CMD ["slacts", "--help"]
+CMD ["--help"]
