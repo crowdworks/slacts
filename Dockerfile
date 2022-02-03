@@ -21,8 +21,7 @@ FROM debian:bullseye-slim
 RUN apt-get update \
   && apt-get install -y --no-install-recommends ca-certificates \
   && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* \
-  && update-ca-certificates
+  && rm -rf /var/lib/apt/lists/*
 
 ENV APP_DIR /usr/src/app
 
