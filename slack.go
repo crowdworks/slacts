@@ -6,8 +6,8 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/nlopes/slack"
 	"github.com/pkg/errors"
+	"github.com/slack-go/slack"
 )
 
 // SlackRequester is interface that wrap slack.Client only methods this package needs
@@ -24,7 +24,7 @@ type SlackClient struct {
 // arg httpclient for using custom http.Client. So this can be nil.
 //
 // For example,
-// 	NewSlackClient('YOUR_TOKEN', urlfetch.Client(ctx))
+// NewSlackClient('YOUR_TOKEN', urlfetch.Client(ctx))
 func NewSlackClient(token string, httpclient *http.Client) *SlackClient {
 	var opts []slack.Option
 

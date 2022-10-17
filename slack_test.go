@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/crowdworks/slacts"
-	"github.com/nlopes/slack"
+	"github.com/slack-go/slack"
 )
 
 type testSlackClient struct {
