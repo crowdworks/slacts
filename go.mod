@@ -17,7 +17,7 @@ require (
 	github.com/stretchr/testify v1.4.0 // indirect
 	github.com/zorkian/go-datadog-api v2.23.0+incompatible
 	golang.org/x/lint v0.0.0-20190409202823-959b441ac422
-	golang.org/x/sys v0.0.0-20190902133755-9109b7679e13 // indirect
+	golang.org/x/sys v0.0.0-20221013171732-95e765b1cc43 // indirect
 	golang.org/x/text v0.3.2 // indirect
 	golang.org/x/tools v0.0.0-20190903025054-afe7f8212f0d
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
