@@ -2,7 +2,7 @@
 # Builder container
 ###############################
 
-FROM golang:1.17.6-bullseye AS builder
+FROM golang:1.20.3-bullseye AS builder
 
 WORKDIR /go/src/github.com/crowdworks/slacts
 
