@@ -2,7 +2,7 @@
 # Builder container
 ###############################
 
-FROM golang:1.20.3-bullseye AS builder
+FROM golang:1.22.1-bookworm AS builder
 
 WORKDIR /go/src/github.com/crowdworks/slacts
 
@@ -16,7 +16,7 @@ RUN make install
 # Exec container
 ###############################
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends ca-certificates \
