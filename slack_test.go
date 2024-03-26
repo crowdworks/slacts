@@ -9,6 +9,8 @@ import (
 	"time"
 
 	"github.com/crowdworks/slacts"
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/slack-go/slack"
 )
 
@@ -121,8 +123,13 @@ func TestNewSlackClient(t *testing.T) {
 
 	for name, c := range cases {
 		t.Run(name, func(t *testing.T) {
-			if got := slacts.NewSlackClient(c.args.token, c.args.httpclient); !reflect.DeepEqual(got, c.want) {
-				t.Errorf("NewSlackClient() = %v, want %v", got, c.want)
+			got := slacts.NewSlackClient(c.args.token, c.args.httpclient)
+			opts := []cmp.Option{
+				cmp.AllowUnexported(slack.Client{}),
+				cmpopts.IgnoreFields(slack.Client{}, "log"), // https://github.com/slack-go/slack/blob/v0.12.5/slack.go#L66
+			}
+			if d := cmp.Diff(got.Client, c.want.Client, opts...); d != "" {
+				t.Errorf("differs: (-got +want)\n%s", d)
 			}
 		})
 	}
