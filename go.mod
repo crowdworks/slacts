@@ -1,8 +1,6 @@
 module github.com/crowdworks/slacts
 
-go 1.22
-
-toolchain go1.22.1
+go 1.22.1
 
 require (
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
@@ -24,6 +22,8 @@ require (
 	golang.org/x/tools v0.6.0
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 )
+
+require github.com/google/go-cmp v0.6.0
 
 require (
 	github.com/fsnotify/fsnotify v1.4.7 // indirect
