@@ -33,6 +33,6 @@ require (
 	github.com/spf13/cast v1.3.0 // indirect
 	github.com/spf13/pflag v1.0.3 // indirect
 	golang.org/x/mod v0.8.0 // indirect
-	golang.org/x/net v0.22.0 // indirect
+	golang.org/x/net v0.23.0 // indirect
 	gopkg.in/yaml.v2 v2.2.2 // indirect
 )
