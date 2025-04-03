@@ -2,7 +2,7 @@
 # Builder container
 ###############################
 
-FROM golang:1.22.1-bookworm AS builder
+FROM golang:1.24.2-bookworm AS builder
 
 WORKDIR /go/src/github.com/crowdworks/slacts
 
