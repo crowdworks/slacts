@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   test:
     docker:
-    - image: golang:1.24.2
+    - image: golang:1.25.1
       environment:
         TEST_RESULTS: /tmp/test-results
     steps:
