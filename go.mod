@@ -12,7 +12,6 @@ require (
 	github.com/spf13/cobra v1.10.1
 	github.com/spf13/viper v1.21.0
 	github.com/zorkian/go-datadog-api v2.30.0+incompatible
-	golang.org/x/lint v0.0.0-20190409202823-959b441ac422
 	golang.org/x/sys v0.36.0 // indirect
 	golang.org/x/text v0.29.0 // indirect
 	golang.org/x/tools v0.36.0
