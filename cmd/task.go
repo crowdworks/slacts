@@ -41,13 +41,13 @@ func newTaskCmd() *cobra.Command {
 		Use:     "task",
 		Short:   "exec tasks",
 		Example: "slacts task slacts.yml",
-		PreRunE: func(cmd *cobra.Command, args []string) error {
+		PreRunE: func(_ *cobra.Command, _ []string) error {
 			if opt.file == "" {
 				return errors.New("task definition file is required")
 			}
 			return nil
 		},
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 			var taskOpts []config.ReadYamlOption
 
 			if len(opt.filter.names()) > 0 {

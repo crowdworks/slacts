@@ -16,9 +16,6 @@ coverage: ## measure tests coverage and generate coverage profile html
 govet: ## exec go vet checks all for package
 	go vet ./...
 
-golint: ## exec golint checks all for package
-	golint ./...
-
 goimports: ## exec goimports checks all for package
 	goimports -l .
 

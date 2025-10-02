@@ -34,7 +34,7 @@ func newSlackCountCmd() *cobra.Command {
 		Short:   "count messages what matches query",
 		Args:    cobra.ExactArgs(1),
 		Example: "slacts slack count \"in:#general message\"",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, args []string) {
 			query := slacts.NewSlackQuery(args[0])
 
 			if slackConfig.Token() == "" {

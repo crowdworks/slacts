@@ -15,7 +15,7 @@ type testDatadogClient struct {
 	hasError bool
 }
 
-func (tdc *testDatadogClient) PostMetrics(metrics []report.DatadogMetric) error {
+func (tdc *testDatadogClient) PostMetrics(_ []report.DatadogMetric) error {
 	if tdc.hasError {
 		return errors.New("some error occurred")
 	}
