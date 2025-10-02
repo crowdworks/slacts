@@ -18,7 +18,7 @@ type testSlackClient struct {
 	hasError bool
 }
 
-func (tsc *testSlackClient) SearchMessagesContext(ctx context.Context, q string, params slack.SearchParameters) (*slack.SearchMessages, error) {
+func (tsc *testSlackClient) SearchMessagesContext(_ context.Context, _ string, _ slack.SearchParameters) (*slack.SearchMessages, error) {
 
 	if tsc.hasError {
 		return nil, errors.New("something error occurred")
