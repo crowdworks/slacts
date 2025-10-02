@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   test:
     docker:
-    - image: golang:1.25.1
+    - image: cimg/go:1.25.1
       environment:
         TEST_RESULTS: /tmp/test-results
     steps:
@@ -49,7 +49,7 @@ jobs:
         path: /tmp/test-results
   docker-build:
     docker:
-    - image: circleci/python
+    - image: cimg/base:current
     steps:
     - checkout
     - setup_remote_docker
