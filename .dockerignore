@@ -1,0 +1,20 @@
+# VCS / CI
+.git
+.gitignore
+.github
+
+# local settings
+.envrc
+.envrc.sample
+slacts.yml
+.idea/
+
+# docs / lint settings
+*.md
+LICENSE
+.golangci.yml
+.hadolint.yaml
+
+# docker
+Dockerfile
+.dockerignore

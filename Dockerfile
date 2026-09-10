@@ -2,7 +2,10 @@
 # Builder container
 ###############################
 
-FROM golang:1.25.1-trixie AS builder
+FROM --platform=$BUILDPLATFORM golang:1.25.1-trixie AS builder
+
+ARG TARGETOS
+ARG TARGETARCH
 
 WORKDIR /go/src/github.com/crowdworks/slacts
 
@@ -10,7 +13,8 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN make install
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
+    go build -trimpath -o /go/bin/slacts github.com/crowdworks/slacts/cmd/slacts
 
 ###############################
 # Exec container
@@ -23,7 +27,7 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-ENV APP_DIR /usr/src/app
+ENV APP_DIR=/usr/src/app
 
 RUN set -x \
     && useradd -s /bin/bash slacts \
