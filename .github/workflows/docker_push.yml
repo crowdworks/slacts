@@ -9,7 +9,7 @@ on:
       - master
 
 concurrency:
-  group: docker-push-${{ github.sha }}
+  group: docker-push-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
