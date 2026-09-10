@@ -16,8 +16,8 @@ func TestNewDatadogConfig(t *testing.T) {
 		wantAPIKey string
 		wantAppKey string
 	}{
-		"normal": {
-			envs: envs{
+		"normal": { //nolint:gosec // These are dummy values for testing
+			envs: envs{ //nolint:gosec // These are dummy values for testing
 				appKey: "datadog_app_token",
 				apiKey: "datadog_api_token",
 			},
