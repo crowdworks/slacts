@@ -36,7 +36,7 @@ export SLACK_API_TOKEN=xxxxxxxxxxxxxxxxxxx
 ### Run
 
 ```bash
-$ go run cmd/slacts/main.go slack count "in#general @channel"
+$ go run cmd/slacts/main.go slack count "in:#general @channel"
 result: 12
 ```
 
@@ -46,7 +46,7 @@ or
 $ make install
 go install github.com/crowdworks/slacts/cmd/slacts
 
-$ slacts slack count "in#general @channel"
+$ slacts slack count "in:#general @channel"
 result: 12
 ```
 
@@ -56,6 +56,15 @@ result: 12
 
 Returns the number of search result.
 Please refer [Guide to search in Slack](https://get.slack.help/hc/en-us/articles/202528808-Guide-to-search-in-Slack-).
+
+#### Specifying a channel by ID
+
+In addition to the channel name (`in:#general`), you can specify a channel by its ID using the channel mention format `<#CHANNEL_ID>`. This is useful when a channel may be renamed, since the ID never changes.
+
+```bash
+$ slacts slack count "in:<#C0123456789> @channel"
+result: 12
+```
 
 ## License
 
