@@ -1,7 +1,8 @@
 # slacts
 
 [![GoDoc](https://godoc.org/github.com/crowdworks/slacts?status.svg)](https://godoc.org/github.com/crowdworks/slacts)
-[![CircleCI](https://circleci.com/gh/crowdworks/slacts.svg?style=svg)](https://circleci.com/gh/crowdworks/slacts)
+[![lint](https://github.com/crowdworks/slacts/actions/workflows/lint.yml/badge.svg)](https://github.com/crowdworks/slacts/actions/workflows/lint.yml)
+[![test](https://github.com/crowdworks/slacts/actions/workflows/test.yml/badge.svg)](https://github.com/crowdworks/slacts/actions/workflows/test.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/crowdworks/slacts)](https://goreportcard.com/report/github.com/crowdworks/slacts)
 
 A CLI tool for Slack statistics
