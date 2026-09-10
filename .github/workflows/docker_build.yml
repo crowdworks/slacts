@@ -1,0 +1,25 @@
+name: docker build
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches:
+      - master
+
+concurrency:
+  group: docker-build-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  docker_build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: docker build
+        run: docker build --no-cache -t slacts:latest .
