@@ -27,7 +27,7 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-ENV APP_DIR /usr/src/app
+ENV APP_DIR=/usr/src/app
 
 RUN set -x \
     && useradd -s /bin/bash slacts \
