@@ -7,7 +7,7 @@ require (
 	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024
 	github.com/pkg/errors v0.9.1
-	github.com/slack-go/slack v0.17.3
+	github.com/slack-go/slack v0.23.1
 	github.com/spf13/afero v1.15.0 // indirect
 	github.com/spf13/cobra v1.10.1
 	github.com/spf13/viper v1.21.0
