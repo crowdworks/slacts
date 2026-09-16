@@ -2,7 +2,7 @@
 # Builder container
 ###############################
 
-FROM --platform=$BUILDPLATFORM golang:1.25.1-trixie AS builder
+FROM --platform=$BUILDPLATFORM golang:1.27.1-trixie AS builder
 
 ARG TARGETOS
 ARG TARGETARCH
