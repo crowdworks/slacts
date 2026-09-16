@@ -1,6 +1,6 @@
 module github.com/crowdworks/slacts
 
-go 1.27
+go 1.27.1
 
 require (
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
